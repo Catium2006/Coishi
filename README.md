@@ -1,6 +1,6 @@
 # Coishi
 运行在Android上的QQ机器人  
-# About
+## About
 Coishi这个名字和图标都来源于古明地恋(Coishi发音与Koishi相同)  
 图标由拾玖绘制  
 ![Coishi](http://d.tonyn.cn:10000/Coishi/Coishi.png "Coishi,来自拾玖")
