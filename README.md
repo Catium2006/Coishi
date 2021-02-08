@@ -3,7 +3,7 @@
 ## About
 Coishi这个名字和图标都来源于古明地恋(Coishi发音与Koishi相同)  
 图标由拾玖绘制  
-![Coishi](http://d.tonyn.cn:10000/Coishi/Coishi.png "Coishi,来自拾玖")
+![Coishi](https://github.com/TonyNomoney/Coishi/blob/main/coishi.png "Coishi,来自拾玖")
 ## 声明
 1.本项目使用GPL3.0协议开源  
 2.由于特殊原因可能随时删除项目  
