@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/app/src/main/java/cn/tonyn/bot/AndroidBot.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/cn/tonyn/bot/EventHandler.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/cn/tonyn/bot/ProcessingLevel.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/cn/tonyn/file/Log.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/cn/tonyn/file/Logger.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/cn/tonyn/value/Values.java" charset="UTF-8" />
+  </component>
+</project>
