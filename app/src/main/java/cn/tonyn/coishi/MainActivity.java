@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import java.io.File;
 
@@ -19,6 +20,9 @@ import cn.tonyn.bot.AndroidBot;
 import cn.tonyn.file.Logger;
 import cn.tonyn.file.TextFile;
 import cn.tonyn.value.Values;
+
+import static cn.tonyn.value.Values.BotOnLine;
+import static cn.tonyn.value.Values.bot;
 
 public class MainActivity extends AppCompatActivity {
     void getPermissions(){
@@ -44,7 +48,8 @@ public class MainActivity extends AppCompatActivity {
         new File(Values.rootpath+"data/config/friends").mkdirs();
         new File(Values.rootpath+"data/config/groups").mkdirs();
         new File(Values.rootpath+"data/log").mkdirs();
-        new File(Values.rootpath+"data/msg").mkdirs();
+        new File(Values.rootpath+"data/消息记录/群").mkdirs();
+        new File(Values.rootpath+"data/消息记录/好友").mkdirs();
         new File(Values.rootpath+"data/背包").mkdirs();
         new File(Values.rootpath+"data/信息").mkdirs();
         new File(Values.rootpath+"data/账户").mkdirs();
@@ -54,13 +59,14 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //权限和目录
         getPermissions();
         mkDirs();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        findViewById(R.id.启动).setOnClickListener(this::onClick);
+        findViewById(R.id.登录).setOnClickListener(this::onClick);
 
 
     }
@@ -89,10 +95,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void onClick(View view){
         int id=view.getId();
-        if(id==R.id.启动){
+        if(id==R.id.登录){
             Logger.l("启动按钮点击");
-            Values.running=true;
             AndroidBot.run();
         }
     }
+
 }

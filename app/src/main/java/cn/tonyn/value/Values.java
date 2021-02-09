@@ -7,4 +7,5 @@ public class Values {
     public static final String rootpath="/sdcard/Coishi/";
     public static boolean running=false;
     public static Bot bot;
+    public static boolean BotOnLine=false;
 }

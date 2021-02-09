@@ -22,6 +22,7 @@ public class Logger {
         Date date = new Date();
         SimpleDateFormat bjSdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");     // 北京
         bjSdf.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));  // 设置北京时区
+        //输出
         System.out.println(bjSdf.format(date)+event);
         //指定了文件名
         FileWriter writer = null;
@@ -46,6 +47,7 @@ public class Logger {
         Date date = new Date();
         SimpleDateFormat bjSdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");     // 北京
         bjSdf.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));  // 设置北京时区
+        //输出
         System.out.println(bjSdf.format(date)+event);
         //指定了文件名
         FileWriter writer = null;

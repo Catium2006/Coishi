@@ -17,10 +17,10 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
             <Button
-                android:id="@+id/启动"
+                android:id="@+id/登录"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="aaa"></Button>
+                android:text="登录"></Button>
             <TextView
                 android:id="@+id/状态"
                 android:layout_width="wrap_content"

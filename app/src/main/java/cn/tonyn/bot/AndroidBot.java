@@ -1,5 +1,4 @@
 package cn.tonyn.bot;
-import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.BotFactory;
 import net.mamoe.mirai.event.GlobalEventChannel;
 import net.mamoe.mirai.event.Listener;
@@ -13,14 +12,16 @@ import java.io.File;
 
 import cn.tonyn.file.Logger;
 import cn.tonyn.file.TextFile;
+import cn.tonyn.util.sysinfo;
 import cn.tonyn.value.Values;
-import st
+import static cn.tonyn.value.Values.bot;
 public class AndroidBot {
     public static void run(){
 
         //new Thread() {
             //@Override
             //public void run() {
+        //sysinfo.main();
                 long QQnum=Long.valueOf(TextFile.Read(Values.rootpath+"QQnum.txt")).longValue();
                 String pwds= TextFile.Read(Values.rootpath+"pwd.txt");
                 Logger.l("当前登录账号:"+QQnum+"密码:"+pwds);
@@ -28,7 +29,7 @@ public class AndroidBot {
                     setProtocol(MiraiProtocol.ANDROID_PAD);
                     fileBasedDeviceInfo(Values.rootpath+"data/config/devices/"+QQnum+".json");
                 }});
-
+                Values.running=true;
                 bot.login();
                 Logger.l("====登录成功====");
 
@@ -43,25 +44,19 @@ public class AndroidBot {
                     if(!new File(Values.rootpath+"data/config/groups/"+group.getId()+".txt").isFile()) {
                         ProcessingLevel.set(group, 0);
                     }
-
                 });
 
-                //EventHandler
-                EventHandler evethandler=new EventHandler(bot);
-
-
                 Listener GroupMsg = GlobalEventChannel.INSTANCE.subscribeAlways(GroupMessageEvent.class, event -> {
-                    evethandler.GrpMsg(event);
+                    EventHandler.GrpMsg(event);
 
                 });
 
                 Listener FriendMsg = GlobalEventChannel.INSTANCE.subscribeAlways(FriendMessageEvent.class, event->{
-                    evethandler.FrdMsg(event);
-
+                    EventHandler.FrdMsg(event);
                 });
 
                 Listener MemberJoin = GlobalEventChannel.INSTANCE.subscribeAlways(MemberJoinEvent.class, event ->{
-                    evethandler.MemberJoin(event);
+                    EventHandler.MemberJoin(event);
                 });
 
                 Listener BotOfflineEvt = GlobalEventChannel.INSTANCE.subscribeAlways(BotOfflineEvent.class, event ->{
@@ -73,4 +68,5 @@ public class AndroidBot {
         //}.start();
 
     }
+
 }

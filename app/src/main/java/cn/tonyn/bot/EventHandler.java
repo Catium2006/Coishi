@@ -1,35 +1,34 @@
 package cn.tonyn.bot;
 
 import java.io.File;
+import java.util.Properties;
+import java.util.Set;
 
 import cn.tonyn.file.Logger;
 import cn.tonyn.file.TextFile;
 import cn.tonyn.value.Values;
 
-import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.event.events.FriendMessageEvent;
 import net.mamoe.mirai.event.events.GroupMessageEvent;
 import net.mamoe.mirai.event.events.MemberJoinEvent;
 
+import static cn.tonyn.value.Values.bot;
+
 public class EventHandler {
-	static Bot MyBot;
-	public EventHandler(Bot bot) {
-		MyBot=bot;
-	}
-	void GrpMsg(GroupMessageEvent event) {
+	static void GrpMsg(GroupMessageEvent event) {
 		String msg=event.getMessage().contentToString();
     	long FromGroup =event.getGroup().getId();
     	long Sender=event.getSender().getId();
+		TextFile.Write(Values.rootpath+"data/消息记录/群/"+FromGroup+".txt",Sender+":"+msg+System.getProperty("line.separator"));
     	if(Values.debug) {
-    		Logger.l("收到群消息："+FromGroup+"("+event.getGroup().getName()+"):"+msg);
-    	}
-    	
+			Logger.l("收到群消息：" + FromGroup + "(" + event.getGroup().getName() + "):" + msg,"Debug");
+		}
     	if(msg.contains("*注册账户")) {
     		if(!(new File(Values.rootpath+"data/账户/"+Sender+".txt")).isFile()) {
     			String 账户=msg.replace("*注册账户", "");
         		TextFile.Write(Values.rootpath+Values.rootpath+"data/账户/"+Sender+".txt", 账户);
-        		TextFile.Write(Values.rootpath+"data/账户/"+Sender+".txt", "IDCard*1,饼干*10,");
+        		TextFile.Write(Values.rootpath+"data/背包/"+Sender+".txt", "IDCard*1,饼干*10,");
         		event.getGroup().sendMessage("你有身份了:"+账户);
         		ProcessingLevel.set(Sender, 1);
     		}else {
@@ -103,9 +102,19 @@ public class EventHandler {
     			if(msg.startsWith("#")) {
     				if((ProcessingLevel.get(Sender)==20)) {
     					msg=msg.replace("#", "");
+    					if(msg.equals("系统信息")){
+							Properties properties = System.getProperties();
+							Set<Object> keySet = properties.keySet();
+							for (Object object : keySet) {
+								System.out.println(object);
+							}
+							System.out.println(properties.get("sun.desktop"));
+							System.out.println(properties.get("user.name"));
+							System.out.println(properties.get("user.language"));
+						}
     					if(msg.equals("BotOff")) {
     	    				event.getGroup().sendMessage("收到关闭指令,即将关闭");
-    	    				MyBot.getFriend(148125778).sendMessage(event.getSenderName()+"执行关闭命令");
+    	    				bot.getFriend(148125778).sendMessage(event.getSenderName()+"执行关闭命令");
     	    				Logger.l("关闭机器人","Debug");
     	    				System.exit(0);
     	    			}
@@ -125,7 +134,7 @@ public class EventHandler {
     	    				String type=SET[1];
     	    				int level= Integer.valueOf(SET[3]).intValue();
     	    				if(type.equals("g")) {
-    	    					Group group=MyBot.getGroupOrFail(Long.parseLong(SET[2]));
+    	    					Group group=bot.getGroupOrFail(Long.parseLong(SET[2]));
     	    					if(level==2) {
     	    						TextFile.Empty(Values.rootpath+"data/config/MCGroup.txt");
     	    						TextFile.Write(Values.rootpath+"data/config/MCGroup.txt", SET[2]);
@@ -155,16 +164,16 @@ public class EventHandler {
     	}
 	}
 	
-	void FrdMsg(FriendMessageEvent event) {
+	static void FrdMsg(FriendMessageEvent event) {
+
 		String msg=event.getMessage().contentToString();
     	long Sender = event.getFriend().getId();
+		TextFile.Write(Values.rootpath+"data/消息记录/好友/"+Sender+".txt",msg+System.getProperty("line.separator"));
     	if(Values.debug) {
-    		Logger.l("收到好友消息:"+msg);
+    		Logger.l("收到好友消息:"+msg,"Debug");
     	}
-    	//�ж��Ƿ��ڰ�������
     	if(!(ProcessingLevel.get(Sender)==0)) {
-    		
-    		//�������ǹ���Ա
+
     		if(ProcessingLevel.get(event.getFriend())==20) {
     			if(msg.equals("BotOff")) {
     				event.getFriend().sendMessage("收到关闭命令,即将关闭");
@@ -190,7 +199,7 @@ public class EventHandler {
     						TextFile.Empty(Values.rootpath+"data/config/MCGroup.txt");
     						TextFile.Write(Values.rootpath+"data/config/MCGroup.txt", SET[2]);
     					}
-    					Group group=MyBot.getGroupOrFail(Long.parseLong(SET[2]));
+    					Group group=bot.getGroupOrFail(Long.parseLong(SET[2]));
     					ProcessingLevel.set(group, level);
     					event.getFriend().sendMessage("设置成功");
     				}
@@ -214,10 +223,10 @@ public class EventHandler {
     	
 	}
 	
-	void MemberJoin(MemberJoinEvent event) {
+	static void MemberJoin(MemberJoinEvent event) {
 		long FromGroup=event.getGroup().getId();
-		if(ProcessingLevel.get(event.getGroup())>0) {
-			
+		if(ProcessingLevel.get(event.getGroup())==2) {
+			event.getGroup().sendMessage("欢迎加入本群！\r\n我是本群的机器人(之一)，你可以使用*帮助获取帮助");
 		}
 	}
 	
@@ -226,10 +235,7 @@ public class EventHandler {
 	
 	
 	static void exit() {
-		Logger.l("�յ��ر�ָ��,ִ���˳�����","Debug");
-		//BotMain.FrdWL.Update();
-		//BotMain.GrpWL.Update();
-		//BotMain.AdminWL.Update();
+		Logger.l("收到关闭指令","Debug");
 		try {
             Thread.sleep(1000); //1000 ���룬Ҳ����1��.
         } catch(InterruptedException ex) {
