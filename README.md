@@ -7,7 +7,7 @@
 4.这个机器人是给我自己用的，里面可能会有大量私货，具体看源码  
 ## 使用
 ### 开始使用
-根据[文档](https://github.com/TonyNomoney/Coishi/docs/使用帮助.md)来开始使用吧!  
+根据[文档](https://github.com/TonyNomoney/Coishi/docs/使用方法.md)来开始使用吧!  
 ### 指令列表
 点击[这里](https://github.com/TonyNomoney/Coishi/docs/指令列表.md)查看全部指令
 ## 鸣谢
