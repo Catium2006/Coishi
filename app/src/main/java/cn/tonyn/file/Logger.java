@@ -1,5 +1,6 @@
 package cn.tonyn.file;
 
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -8,10 +9,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
+import cn.tonyn.coishi.MainActivity;
+import cn.tonyn.coishi.R;
 import cn.tonyn.value.Values;
 
 
-public class Logger {
+public class Logger{
     public static void l(String event){
         event="[Info] "+event;
         File log = new File(Values.rootpath+"data/log/Info.log");

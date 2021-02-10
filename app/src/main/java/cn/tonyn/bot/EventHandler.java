@@ -1,18 +1,19 @@
 package cn.tonyn.bot;
 
+
 import java.io.File;
-import java.util.Properties;
-import java.util.Set;
 
 import cn.tonyn.file.Logger;
 import cn.tonyn.file.TextFile;
 import cn.tonyn.value.Values;
+import kotlin.reflect.jvm.internal.ReflectProperties;
 
 import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.event.events.FriendMessageEvent;
 import net.mamoe.mirai.event.events.GroupMessageEvent;
 import net.mamoe.mirai.event.events.MemberJoinEvent;
 
+import static cn.tonyn.value.Values.BatteryNow;
 import static cn.tonyn.value.Values.bot;
 
 public class EventHandler {
@@ -24,23 +25,21 @@ public class EventHandler {
     	if(Values.debug) {
 			Logger.l("收到群消息：" + FromGroup + "(" + event.getGroup().getName() + "):" + msg,"Debug");
 		}
-    	if(msg.contains("*注册账户")) {
-    		if(!(new File(Values.rootpath+"data/账户/"+Sender+".txt")).isFile()) {
-    			String 账户=msg.replace("*注册账户", "");
-        		TextFile.Write(Values.rootpath+Values.rootpath+"data/账户/"+Sender+".txt", 账户);
-        		TextFile.Write(Values.rootpath+"data/背包/"+Sender+".txt", "IDCard*1,饼干*10,");
-        		event.getGroup().sendMessage("你有身份了:"+账户);
-        		ProcessingLevel.set(Sender, 1);
-    		}else {
-    			event.getGroup().sendMessage("你已经有一个账户了");
-    		}
-    	}
+
     	//白名单
     	if(!(ProcessingLevel.get(event.getGroup())==0)) {
-    		//服务器群
-			if(ProcessingLevel.get(event.getGroup())==2) {
-
-    		}
+			if(msg.contains("*注册用户")) {
+				File user = new File(Values.rootpath + "data/用户/" + Sender + ".txt");
+				if (!user.isFile()) {
+					String 账户 = msg.replace("*注册用户", "");
+					TextFile.Write(Values.rootpath + "data/用户/" + Sender + ".txt", 账户);
+					TextFile.Write(Values.rootpath + "data/背包/" + Sender + ".txt", "IDCard*1,饼干*10,");
+					event.getGroup().sendMessage("你有身份了:" + 账户);
+					ProcessingLevel.set(Sender, 1);
+				} else {
+					event.getGroup().sendMessage("你已经有一个账户了");
+				}
+			}
 			//发送者有账户
     		if(!(ProcessingLevel.get(Sender)==0)) {
     			if((msg.startsWith("$"))||(msg.startsWith("*"))) {
@@ -103,14 +102,22 @@ public class EventHandler {
     				if((ProcessingLevel.get(Sender)==20)) {
     					msg=msg.replace("#", "");
     					if(msg.equals("系统信息")){
-							Properties properties = System.getProperties();
-							Set<Object> keySet = properties.keySet();
-							for (Object object : keySet) {
-								System.out.println(object);
+    						long time=System.currentTimeMillis();
+    						time=time-Values.starttime;
+    						//得到秒数
+    						long seconds=time/1000;
+
+    						String TimeAvailable="";
+    						//如果消耗电量不是0
+    						if((Values.BatteryPrime-Values.BatteryNow)!=0){
+								long v=(Values.BatteryPrime-Values.BatteryNow)/seconds;
+								long TimeAvailableL=BatteryNow/v;
+								TimeAvailable=TimeAvailableL+"";
+							}else{
+    							TimeAvailable="[Unknown]";
 							}
-							System.out.println(properties.get("sun.desktop"));
-							System.out.println(properties.get("user.name"));
-							System.out.println(properties.get("user.language"));
+    						String send2="操作系统信息:\r\n-操作系统:"+System.getProperty("os.name")+"/"+System.getProperty("os.arch")+"/"+System.getProperty("os.version")+"\r\n-程序运行目录:"+System.getProperty("user.dir")+"\r\n-设备用户:"+System.getProperty("user.name")+"\r\n-JVM:"+System.getProperty("java.vm.name")+"/"+System.getProperty("java.vm.version")+"\r\n-当前电量:"+Values.BatteryNow+"\r\n应用进程信息:\r\n-运行时间:"+seconds+"s\r\n-保留进程:"+Values.keepAppRunning+"\r\n-线程数:"+Values.NumbeOfThreads+"\r\n-消耗的电量:"+(Values.BatteryPrime-Values.BatteryNow)+"％\r\n-预计可运行时间:"+TimeAvailable+"s";
+							event.getGroup().sendMessage(send2);
 						}
     					if(msg.equals("BotOff")) {
     	    				event.getGroup().sendMessage("收到关闭指令,即将关闭");
@@ -149,6 +156,18 @@ public class EventHandler {
     	    				}
 
     	    			}
+    	    			if(msg.equals("存活测试")){
+    	    				long time=0;
+    	    				while(true){
+								try {
+									Thread.sleep(10000); //1000 ���룬Ҳ����1��.
+								} catch(InterruptedException ex) {
+									Thread.currentThread().interrupt();
+								}
+								time=time+10000;
+								event.getGroup().sendMessage("存活时间:"+time+"ms");
+							}
+						}
     				}else {
         				event.getGroup().sendMessage(msg+":permission denied");
         			}

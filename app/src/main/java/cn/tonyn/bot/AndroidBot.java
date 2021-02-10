@@ -1,4 +1,5 @@
 package cn.tonyn.bot;
+
 import net.mamoe.mirai.BotFactory;
 import net.mamoe.mirai.event.GlobalEventChannel;
 import net.mamoe.mirai.event.Listener;
@@ -12,16 +13,15 @@ import java.io.File;
 
 import cn.tonyn.file.Logger;
 import cn.tonyn.file.TextFile;
-import cn.tonyn.util.sysinfo;
 import cn.tonyn.value.Values;
 import static cn.tonyn.value.Values.bot;
-public class AndroidBot {
+public class AndroidBot{
     public static void run(){
 
         //new Thread() {
             //@Override
             //public void run() {
-        //sysinfo.main();
+
                 long QQnum=Long.valueOf(TextFile.Read(Values.rootpath+"QQnum.txt")).longValue();
                 String pwds= TextFile.Read(Values.rootpath+"pwd.txt");
                 Logger.l("当前登录账号:"+QQnum+"密码:"+pwds);

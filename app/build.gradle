@@ -1,4 +1,8 @@
+plugins {
+    //id 'org.jetbrains.kotlin.jvm' version '1.4.21'
+}
 apply plugin: 'com.android.application'
+
 android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -31,7 +35,6 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
     implementation files('libs/mirai-core-all-2.3.2-all.jar')
-    //implementation 'com.github.oshi:oshi-core:3.4.4'
-    //implementation 'net.mamoe:mirai-core:2.3.2'
 }
+
 
