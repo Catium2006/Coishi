@@ -7,9 +7,9 @@
 4.这个机器人是给我自己用的，里面可能会有大量私货，具体看源码  
 ## 使用
 ### 开始使用
-根据[文档](https://github.com/TonyNomoney/Coishi/docs/使用帮助.md)来开始使用吧!  
+根据[文档](https://github.com/TonyNomoney/Coishi/blob/main/docs/%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95.md)来开始使用吧!  
 ### 指令列表
-点击[这里](https://github.com/TonyNomoney/Coishi/docs/指令列表.md)查看全部指令
+点击[这里](https://github.com/TonyNomoney/Coishi/blob/main/docs/%E6%8C%87%E4%BB%A4%E5%88%97%E8%A1%A8.md)查看全部指令
 ## 鸣谢
 使用[mirai](https://github.com/mamoe/mirai)作为API实现机器人功能  
 感谢Android Studio强大的IDE功能  
