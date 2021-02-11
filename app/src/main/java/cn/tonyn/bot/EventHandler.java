@@ -109,14 +109,16 @@ public class EventHandler {
 
     						String TimeAvailable="";
     						//如果消耗电量不是0
-    						if((Values.BatteryPrime-Values.BatteryNow)!=0){
-								long v=(Values.BatteryPrime-Values.BatteryNow)/seconds;
-								long TimeAvailableL=BatteryNow/v;
-								TimeAvailable=TimeAvailableL+"";
-							}else{
+    						if((Values.BatteryPrime-Values.BatteryNow)>0){
+								long v=seconds/(Values.BatteryPrime-Values.BatteryNow);
+								long TimeAvailableL=BatteryNow*v;
+								TimeAvailable=TimeAvailableL+"s";
+							}if((Values.BatteryPrime-Values.BatteryNow)==0){
     							TimeAvailable="[Unknown]";
-							}
-    						String send2="操作系统信息:\r\n-操作系统:"+System.getProperty("os.name")+"/"+System.getProperty("os.arch")+"/"+System.getProperty("os.version")+"\r\n-程序运行目录:"+System.getProperty("user.dir")+"\r\n-设备用户:"+System.getProperty("user.name")+"\r\n-JVM:"+System.getProperty("java.vm.name")+"/"+System.getProperty("java.vm.version")+"\r\n-当前电量:"+Values.BatteryNow+"\r\n应用进程信息:\r\n-运行时间:"+seconds+"s\r\n-保留进程:"+Values.keepAppRunning+"\r\n-线程数:"+Values.NumbeOfThreads+"\r\n-消耗的电量:"+(Values.BatteryPrime-Values.BatteryNow)+"％\r\n-预计可运行时间:"+TimeAvailable+"s";
+							}if((Values.BatteryPrime-Values.BatteryNow)<0){
+                                TimeAvailable="[充电中]";
+                            }
+    						String send2="操作系统信息:\r\n├操作系统:"+System.getProperty("os.name")+"/"+System.getProperty("os.arch")+"/"+System.getProperty("os.version")+"\r\n├程序运行目录:"+System.getProperty("user.dir")+"\r\n├设备用户:"+System.getProperty("user.name")+"\r\n├JVM:"+System.getProperty("java.vm.name")+"/"+System.getProperty("java.vm.version")+"\r\n├当前电量:"+Values.BatteryNow+"％\r\n应用进程信息:\r\n├运行时间:"+seconds+"s\r\n├保留进程:"+Values.keepAppRunning+"\r\n├线程数:"+Values.NumbeOfThreads+"\r\n├消耗的电量:"+(Values.BatteryPrime-Values.BatteryNow)+"％\r\n├预计可运行时间:"+TimeAvailable;
 							event.getGroup().sendMessage(send2);
 						}
     					if(msg.equals("BotOff")) {
