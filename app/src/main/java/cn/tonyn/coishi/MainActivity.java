@@ -59,7 +59,10 @@ public class MainActivity extends AppCompatActivity {
         new File(Values.rootpath+"data/背包").mkdirs();
         new File(Values.rootpath+"data/信息").mkdirs();
         new File(Values.rootpath+"data/用户").mkdirs();
-        TextFile.Write(Values.rootpath+"data/config/食物.txt","饼干,");
+        if(!new File(Values.rootpath+"data/config/食物.txt").isFile()){
+            TextFile.Write(Values.rootpath+"data/config/食物.txt","饼干,");
+        }
+
 
     }
     @Override

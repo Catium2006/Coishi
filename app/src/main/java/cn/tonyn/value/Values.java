@@ -7,7 +7,6 @@ public class Values {
     public static final String rootpath="/sdcard/Coishi/";
     public static boolean running=false;
     public static Bot bot;
-    public static boolean BotOnLine=false;
     public static boolean keepAppRunning=false;
     public static long starttime=0;
     public static int BatteryPrime=0;

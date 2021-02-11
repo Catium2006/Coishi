@@ -2,19 +2,24 @@ package cn.tonyn.bot;
 
 
 import java.io.File;
+import java.util.Random;
 
 import cn.tonyn.file.Logger;
 import cn.tonyn.file.TextFile;
 import cn.tonyn.value.Values;
-import kotlin.reflect.jvm.internal.ReflectProperties;
 
 import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.event.events.FriendMessageEvent;
 import net.mamoe.mirai.event.events.GroupMessageEvent;
 import net.mamoe.mirai.event.events.MemberJoinEvent;
+import net.mamoe.mirai.message.data.Image;
+import net.mamoe.mirai.message.data.MessageUtils;
+import net.mamoe.mirai.utils.ExternalResource;
 
 import static cn.tonyn.value.Values.BatteryNow;
 import static cn.tonyn.value.Values.bot;
+import static cn.tonyn.value.Values.rootpath;
+
 
 public class EventHandler {
 	static void GrpMsg(GroupMessageEvent event) {
@@ -28,7 +33,10 @@ public class EventHandler {
 
     	//白名单
     	if(!(ProcessingLevel.get(event.getGroup())==0)) {
-			if(msg.contains("*注册用户")) {
+    	    if(msg.equals("*帮助")||msg.equals("$帮助")){
+                event.getGroup().sendMessage("https://github.com/TonyNomoney/Coishi/blob/main/docs/%E6%8C%87%E4%BB%A4%E5%88%97%E8%A1%A8.md");
+            }
+			if(msg.contains("*注册用户")||msg.equals("$注册用户")) {
 				File user = new File(Values.rootpath + "data/用户/" + Sender + ".txt");
 				if (!user.isFile()) {
 					String 账户 = msg.replace("*注册用户", "");
@@ -47,6 +55,27 @@ public class EventHandler {
     				msg=msg.replace("*" , "");
     				msg=msg.replace("$ " , "");
     				msg=msg.replace("* " , "");
+    				if(msg.equals("签到")){
+
+                    }
+    				if(msg.equals("随机弔图")){
+						File folder = new File(Values.rootpath+"data/图片/随机弔图");
+						File []list = folder.listFiles();
+						int fileCount = 0;
+						long length = 0;
+						for (File file : list){
+							if (file.isFile()){
+								fileCount++;
+								length += file.length();
+							}
+						}
+						Random r = new Random();
+						int i=r.nextInt(fileCount);
+						File file =new File(Values.rootpath+"data/图片/随机弔图/image"+i+".jpg");
+						Image image=event.getGroup().uploadImage(ExternalResource.create(file));
+						// 上传一个图片并得到 Image 类型的 Message
+						event.getGroup().sendMessage(image); // 发送图片
+					}
     				if(msg.equals("背包")) {
         				String contents=TextFile.Read(Values.rootpath+"data/背包/"+Sender+".txt");
         				event.getGroup().sendMessage("你的背包:\r\n"+contents);
@@ -144,10 +173,6 @@ public class EventHandler {
     	    				int level= Integer.valueOf(SET[3]).intValue();
     	    				if(type.equals("g")) {
     	    					Group group=bot.getGroupOrFail(Long.parseLong(SET[2]));
-    	    					if(level==2) {
-    	    						TextFile.Empty(Values.rootpath+"data/config/MCGroup.txt");
-    	    						TextFile.Write(Values.rootpath+"data/config/MCGroup.txt", SET[2]);
-    	    					}
     	    					ProcessingLevel.set(group, level);
     	    					event.getGroup().sendMessage("设置成功");
     	    				}
@@ -162,12 +187,12 @@ public class EventHandler {
     	    				long time=0;
     	    				while(true){
 								try {
-									Thread.sleep(10000); //1000 ���룬Ҳ����1��.
+									Thread.sleep(10000);
 								} catch(InterruptedException ex) {
 									Thread.currentThread().interrupt();
 								}
-								time=time+10000;
-								event.getGroup().sendMessage("存活时间:"+time+"ms");
+								time=time+10;
+								event.getGroup().sendMessage("存活时间:"+time+"s");
 							}
 						}
     				}else {
@@ -258,7 +283,7 @@ public class EventHandler {
 	static void exit() {
 		Logger.l("收到关闭指令","Debug");
 		try {
-            Thread.sleep(1000); //1000 ���룬Ҳ����1��.
+            Thread.sleep(1000);
         } catch(InterruptedException ex) {
             Thread.currentThread().interrupt();
         }
