@@ -6,13 +6,16 @@ import java.util.Random;
 
 import cn.tonyn.file.Logger;
 import cn.tonyn.file.TextFile;
+import cn.tonyn.util.Download;
 import cn.tonyn.value.Values;
 
 import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.event.events.FriendMessageEvent;
 import net.mamoe.mirai.event.events.GroupMessageEvent;
+import net.mamoe.mirai.event.events.ImageUploadEvent;
 import net.mamoe.mirai.event.events.MemberJoinEvent;
 import net.mamoe.mirai.message.data.Image;
+import net.mamoe.mirai.message.data.Message;
 import net.mamoe.mirai.message.data.MessageUtils;
 import net.mamoe.mirai.utils.ExternalResource;
 
@@ -22,6 +25,9 @@ import static cn.tonyn.value.Values.rootpath;
 
 
 public class EventHandler {
+	//复读
+	static String msg1="";
+	static String msg2="";
 	static void GrpMsg(GroupMessageEvent event) {
 		String msg=event.getMessage().contentToString();
     	long FromGroup =event.getGroup().getId();
@@ -31,8 +37,16 @@ public class EventHandler {
 			Logger.l("收到群消息：" + FromGroup + "(" + event.getGroup().getName() + "):" + msg,"Debug");
 		}
 
-    	//白名单
+    	//群白名单
     	if(!(ProcessingLevel.get(event.getGroup())==0)) {
+    		waitFor(100);
+    		//复读
+    		msg1=msg2;
+    		msg2=msg;
+    		if(msg1.equals(msg2)){
+				event.getGroup().sendMessage(msg);
+			}
+
     	    if(msg.equals("*帮助")||msg.equals("$帮助")){
                 event.getGroup().sendMessage("https://github.com/TonyNomoney/Coishi/blob/main/docs/%E6%8C%87%E4%BB%A4%E5%88%97%E8%A1%A8.md");
             }
@@ -55,11 +69,8 @@ public class EventHandler {
     				msg=msg.replace("*" , "");
     				msg=msg.replace("$ " , "");
     				msg=msg.replace("* " , "");
-    				if(msg.equals("签到")){
-
-                    }
-    				if(msg.equals("随机弔图")){
-						File folder = new File(Values.rootpath+"data/图片/随机弔图");
+    				if(msg.equals("随机图片")){
+						File folder = new File(Values.rootpath+"data/图片/随机图片");
 						File []list = folder.listFiles();
 						int fileCount = 0;
 						long length = 0;
@@ -71,11 +82,39 @@ public class EventHandler {
 						}
 						Random r = new Random();
 						int i=r.nextInt(fileCount);
-						File file =new File(Values.rootpath+"data/图片/随机弔图/image"+i+".jpg");
+						File file =new File(Values.rootpath+"data/图片/随机图片/image"+i+".jpg");
 						Image image=event.getGroup().uploadImage(ExternalResource.create(file));
 						// 上传一个图片并得到 Image 类型的 Message
 						event.getGroup().sendMessage(image); // 发送图片
 					}
+    				if(msg.startsWith("图库添加")){
+    					/*Message message=event.getMessage();
+    					String[] MSG=(message+"").split("\\*图库添加");
+						String imageId=MSG[1];
+						imageId=imageId.replace("[mirai:image:","");
+						imageId=imageId.replace("]","");
+						System.out.println(imageId);
+						Image image=Image.fromId(imageId);
+						String ImageURl=Image.queryUrl(image);*/
+						//获取图片数
+						File folder = new File(Values.rootpath+"data/图片/随机图片");
+						File []list = folder.listFiles();
+						int fileCount = 0;
+						long length = 0;
+						for (File file : list){
+							if (file.isFile()){
+								fileCount++;
+								length += file.length();
+							}
+						}
+						int i=fileCount;
+						String FilePath= rootpath+"data/图片/随机图片/image"+i+".jpg";
+						/*if(Download.StreamToFile(Download.getInputStreamFromUrl(ImageURl),FilePath)){
+							event.getGroup().sendMessage("保存成功");
+						}*/
+						Download.DownloadImageFromMsg(event.getMessage(),FilePath);
+
+    				}
     				if(msg.equals("背包")) {
         				String contents=TextFile.Read(Values.rootpath+"data/背包/"+Sender+".txt");
         				event.getGroup().sendMessage("你的背包:\r\n"+contents);
@@ -272,14 +311,23 @@ public class EventHandler {
 	static void MemberJoin(MemberJoinEvent event) {
 		long FromGroup=event.getGroup().getId();
 		if(ProcessingLevel.get(event.getGroup())==2) {
-			event.getGroup().sendMessage("欢迎加入本群！\r\n我是本群的机器人(之一)，你可以使用*帮助获取帮助");
+			File file =new File(Values.rootpath+"data/图片/迎新.png");
+			Image image=event.getGroup().uploadImage(ExternalResource.create(file));
+			// 上传一个图片并得到 Image 类型的 Message
+			event.getGroup().sendMessage(image); // 发送图片
+			event.getGroup().sendMessage("欢迎加入本群！\r\n我是本群的机器人(之一)，你可以使用*帮助 获取帮助");
 		}
 	}
+
 	
 	
-	
-	
-	
+	static void waitFor(int somewhile){
+		try {
+			Thread.sleep(somewhile);
+		} catch(InterruptedException ex) {
+			Thread.currentThread().interrupt();
+		}
+	}
 	static void exit() {
 		Logger.l("收到关闭指令","Debug");
 		try {

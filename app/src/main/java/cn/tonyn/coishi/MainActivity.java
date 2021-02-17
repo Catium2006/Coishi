@@ -1,15 +1,12 @@
 package cn.tonyn.coishi;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Bundle;
 
-import androidx.annotation.Keep;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
@@ -18,7 +15,6 @@ import androidx.core.content.ContextCompat;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 
 import com.google.android.material.snackbar.Snackbar;
 
@@ -149,7 +145,8 @@ public class MainActivity extends AppCompatActivity {
     }
     MediaPlayer mp3player=null;
     void setKeepRunning(){
-        mp3player=MediaPlayer.create(this,R.raw.music2);
+        //播放一个空音频
+        mp3player=MediaPlayer.create(this,R.raw.music1);
         mp3player.setLooping(true);
         new Thread(){
             @Override
