@@ -14,3 +14,4 @@
 ## 鸣谢
 使用[mirai](https://github.com/mamoe/mirai)作为API实现机器人功能  
 感谢Android Studio强大的IDE功能  
+感谢空白对我的指导  
