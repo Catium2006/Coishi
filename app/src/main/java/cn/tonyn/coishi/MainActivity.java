@@ -126,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
         //noinspection SimplifiableIfStatement
         if (id == R.id.watch_github) {
-            Intent intent=new Intent(Intent.ACTION_VIEW,Uri.parse("http://kzt.mcus.xyz:12366/public/login"));
+            Intent intent=new Intent(Intent.ACTION_VIEW,Uri.parse("http://github.com/TonyNomoney/Coishi"));
             startActivity(intent);
             return true;
         }
