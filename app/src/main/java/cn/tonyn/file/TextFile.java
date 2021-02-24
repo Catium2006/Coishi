@@ -9,6 +9,7 @@ import java.io.IOException;
 
 public class TextFile {
 	public static void Write(String file,String str) {
+		//对于文本文件的写入
 		File textfile=new File(file);
         FileWriter writer = null;
 	    try {
@@ -37,6 +38,7 @@ public class TextFile {
 	}
 	
 	public static String Read(String file) {
+		//文本文件读取
         File textfile=new File(file);
 	    FileReader reader = null;
 	    try {
@@ -52,10 +54,11 @@ public class TextFile {
 			return "";
 	    }
 
-		
+
 	}
 	
 	public static String Read(File file) {
+		//还是读取
 	    FileReader reader = null;
 	    try {
 			reader = new FileReader(file);
@@ -73,6 +76,7 @@ public class TextFile {
 	}
 	
 	public static void Empty(String file) {
+		//清空文件，其实是删除了
 		if(new File(file).isFile()) {
 			if(new File(file).delete()) {
 				Write(file,"");
@@ -82,6 +86,7 @@ public class TextFile {
 		}
 	}
     public static void Empty(File file) {
+		//同上
     	if(file.isFile()) {
 			if(file.delete()) {
 				Write(file,"");

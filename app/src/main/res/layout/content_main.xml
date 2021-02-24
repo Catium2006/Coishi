@@ -17,26 +17,40 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-            <TextView
-                android:id="@+id/Text1"
+
+
+            <EditText
+                android:id="@+id/enter_qq"
+                android:textColor="#000000"
+                android:hint="请输入QQ"
+                android:editable="true"
+                android:inputType="number"
+                android:text=""
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:alpha="100"
+                ></EditText>
+            <EditText
+                android:id="@+id/enter_pwd"
                 android:textColor="#000000"
-                android:text="登录机器人"></TextView>
+                android:hint="请输入密码"
+                android:editable="true"
+                android:inputType="textPassword"
+                android:text=""
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                ></EditText>
             <Button
                 android:id="@+id/登录"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
 
-                android:text="登录"></Button>
+                android:text="登录机器人"></Button>
 
             <Button
                 android:id="@+id/强制保留后台"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="强制保留后台"></Button>
-
         </LinearLayout>
     </ScrollView>
 

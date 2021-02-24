@@ -12,11 +12,8 @@ import cn.tonyn.value.Values;
 import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.event.events.FriendMessageEvent;
 import net.mamoe.mirai.event.events.GroupMessageEvent;
-import net.mamoe.mirai.event.events.ImageUploadEvent;
 import net.mamoe.mirai.event.events.MemberJoinEvent;
 import net.mamoe.mirai.message.data.Image;
-import net.mamoe.mirai.message.data.Message;
-import net.mamoe.mirai.message.data.MessageUtils;
 import net.mamoe.mirai.utils.ExternalResource;
 
 import static cn.tonyn.value.Values.BatteryNow;
@@ -28,10 +25,14 @@ public class EventHandler {
 	//复读
 	static String msg1="";
 	static String msg2="";
+
+	//群消息处理
 	static void GrpMsg(GroupMessageEvent event) {
 		String msg=event.getMessage().contentToString();
     	long FromGroup =event.getGroup().getId();
     	long Sender=event.getSender().getId();
+    	//记录所有消息
+		Logger.l(event.getGroup()+"-"+Sender+":"+msg,"msg");
 		TextFile.Write(Values.rootpath+"data/消息记录/群/"+FromGroup+".txt",Sender+":"+msg+System.getProperty("line.separator"));
     	if(Values.debug) {
 			Logger.l("收到群消息：" + FromGroup + "(" + event.getGroup().getName() + "):" + msg,"Debug");
@@ -39,6 +40,7 @@ public class EventHandler {
 
     	//群白名单
     	if(!(ProcessingLevel.get(event.getGroup())==0)) {
+    		//等待100ms，防止出现消息看不到的问题
     		waitFor(100);
     		//复读
     		msg1=msg2;
@@ -46,10 +48,12 @@ public class EventHandler {
     		if(msg1.equals(msg2)){
 				event.getGroup().sendMessage(msg);
 			}
-
+    		//帮助
     	    if(msg.equals("*帮助")||msg.equals("$帮助")){
+    	    	//发送markdown的链接
                 event.getGroup().sendMessage("https://github.com/TonyNomoney/Coishi/blob/main/docs/%E6%8C%87%E4%BB%A4%E5%88%97%E8%A1%A8.md");
             }
+    	    //注册用户
 			if(msg.contains("*注册用户")||msg.equals("$注册用户")) {
 				File user = new File(Values.rootpath + "data/用户/" + Sender + ".txt");
 				if (!user.isFile()) {
@@ -59,17 +63,22 @@ public class EventHandler {
 					event.getGroup().sendMessage("你有身份了:" + 账户);
 					ProcessingLevel.set(Sender, 1);
 				} else {
+					//如果已经有此用户
 					event.getGroup().sendMessage("你已经有一个账户了");
 				}
 			}
-			//发送者有账户
+			//如果发送者有账户
     		if(!(ProcessingLevel.get(Sender)==0)) {
+    			//如果发送的是指令
     			if((msg.startsWith("$"))||(msg.startsWith("*"))) {
+    				//获取有效信息
     				msg=msg.replace("$" , "");
     				msg=msg.replace("*" , "");
     				msg=msg.replace("$ " , "");
     				msg=msg.replace("* " , "");
+    				//随机图片
     				if(msg.equals("随机图片")){
+    					//先得到图库总数
 						File folder = new File(Values.rootpath+"data/图片/随机图片");
 						File []list = folder.listFiles();
 						int fileCount = 0;
@@ -80,22 +89,15 @@ public class EventHandler {
 								length += file.length();
 							}
 						}
+						//得到一张随机图片
 						Random r = new Random();
 						int i=r.nextInt(fileCount);
 						File file =new File(Values.rootpath+"data/图片/随机图片/image"+i+".jpg");
-						Image image=event.getGroup().uploadImage(ExternalResource.create(file));
 						// 上传一个图片并得到 Image 类型的 Message
+						Image image=event.getGroup().uploadImage(ExternalResource.create(file));
 						event.getGroup().sendMessage(image); // 发送图片
 					}
     				if(msg.startsWith("图库添加")){
-    					/*Message message=event.getMessage();
-    					String[] MSG=(message+"").split("\\*图库添加");
-						String imageId=MSG[1];
-						imageId=imageId.replace("[mirai:image:","");
-						imageId=imageId.replace("]","");
-						System.out.println(imageId);
-						Image image=Image.fromId(imageId);
-						String ImageURl=Image.queryUrl(image);*/
 						//获取图片数
 						File folder = new File(Values.rootpath+"data/图片/随机图片");
 						File []list = folder.listFiles();
@@ -109,16 +111,12 @@ public class EventHandler {
 						}
 						int i=fileCount;
 						String FilePath= rootpath+"data/图片/随机图片/image"+i+".jpg";
-						/*if(Download.StreamToFile(Download.getInputStreamFromUrl(ImageURl),FilePath)){
-							event.getGroup().sendMessage("保存成功");
-						}*/
+						//经测试下载到的图片可能会出现“未经允许不得使用”的问题
 						Download.DownloadImageFromMsg(event.getMessage(),FilePath);
+						event.getGroup().sendMessage("保存成功");
 
     				}
-    				if(msg.equals("背包")) {
-        				String contents=TextFile.Read(Values.rootpath+"data/背包/"+Sender+".txt");
-        				event.getGroup().sendMessage("你的背包:\r\n"+contents);
-        			}
+
     				if(msg.startsWith("查看")) {
     					String thing=msg.replace("查看", "");
     					File f=new File(Values.rootpath+"data/信息/"+thing+".txt");
@@ -129,7 +127,12 @@ public class EventHandler {
     						event.getGroup().sendMessage("没有相关信息");
     					}
     				}
-    				if(msg.startsWith("E")) {
+    				/*if(msg.equals("背包")) {
+        				String contents=TextFile.Read(Values.rootpath+"data/背包/"+Sender+".txt");
+        				event.getGroup().sendMessage("你的背包:\r\n"+contents);
+        			}*/
+
+    				/*if(msg.startsWith("E")) {
     					String thing=msg.replace("E", "");
     					if((TextFile.Read(Values.rootpath+"data/config/食物.txt")).contains(thing)){
     						//可以作为模板
@@ -161,7 +164,7 @@ public class EventHandler {
 							event.getGroup().sendMessage("你真的要吃这个吗?");
 						}
     					
-    				}
+    				}*/
     			
         			
         		}
@@ -169,12 +172,12 @@ public class EventHandler {
     			if(msg.startsWith("#")) {
     				if((ProcessingLevel.get(Sender)==20)) {
     					msg=msg.replace("#", "");
+
     					if(msg.equals("系统信息")){
     						long time=System.currentTimeMillis();
     						time=time-Values.starttime;
     						//得到秒数
     						long seconds=time/1000;
-
     						String TimeAvailable="";
     						//如果消耗电量不是0
     						if((Values.BatteryPrime-Values.BatteryNow)>0){
@@ -186,15 +189,52 @@ public class EventHandler {
 							}if((Values.BatteryPrime-Values.BatteryNow)<0){
                                 TimeAvailable="[充电中]";
                             }
-    						String send2="操作系统信息:\r\n├操作系统:"+System.getProperty("os.name")+"/"+System.getProperty("os.arch")+"/"+System.getProperty("os.version")+"\r\n├程序运行目录:"+System.getProperty("user.dir")+"\r\n├设备用户:"+System.getProperty("user.name")+"\r\n├JVM:"+System.getProperty("java.vm.name")+"/"+System.getProperty("java.vm.version")+"\r\n├当前电量:"+Values.BatteryNow+"％\r\n应用进程信息:\r\n├运行时间:"+seconds+"s\r\n├保留进程:"+Values.keepAppRunning+"\r\n├线程数:"+Values.NumbeOfThreads+"\r\n├消耗的电量:"+(Values.BatteryPrime-Values.BatteryNow)+"％\r\n├预计可运行时间:"+TimeAvailable;
-							event.getGroup().sendMessage(send2);
+    						String send="操作系统信息:\r\n├操作系统:"+System.getProperty("os.name")+"/"+System.getProperty("os.arch")+"/"+System.getProperty("os.version")+"\r\n├程序运行目录:"+System.getProperty("user.dir")+"\r\n├设备用户:"+System.getProperty("user.name")+"\r\n├JVM:"+System.getProperty("java.vm.name")+"/"+System.getProperty("java.vm.version")+"\r\n├当前电量:"+Values.BatteryNow+"％\r\n应用进程信息:\r\n├运行时间:"+seconds+"s\r\n├保留进程:"+Values.keepAppRunning+"\r\n├线程数:"+Values.NumbeOfThreads+"\r\n├消耗的电量:"+(Values.BatteryPrime-Values.BatteryNow)+"％\r\n├预计可运行时间:"+TimeAvailable;
+							event.getGroup().sendMessage(send);
 						}
+    					/*if(msg.startsWith("sys")){
+    					//有问题，已弃用
+							final String msg3=msg.replace("sys ","");
+    						new Thread(){
+    							@Override
+								public void run(){
+									//这部分空白指导完成
+									String[] cmd = { "/system/bin/sh", "-c", msg3 };
+									BufferedInputStream in=null;
+									try {
+										Process ps = Runtime.getRuntime().exec(cmd);
+										ps.waitFor();
+										in=new BufferedInputStream(ps.getInputStream());
+										int ptr=0;
+										StringBuffer buffer=new StringBuffer();
+										while((ptr=in.read())!=-1){
+											buffer.append((char)ptr);
+										}
+										event.getGroup().sendMessage(buffer.toString());
+										ps.destroy();
+									}catch (IOException e){
+										Logger.l(e.getMessage()+"\r\n"+e.getStackTrace());
+									}catch( InterruptedException e2){
+										Logger.l(e2.getMessage()+"\r\n"+e2.getStackTrace());
+									}finally{
+										try{
+											in.close();
+										}catch(IOException e){
+											//do nothing
+										}
+									}
+								}
+							}.start();
+
+						}*/
+
     					if(msg.equals("BotOff")) {
+    						//关闭
     	    				event.getGroup().sendMessage("收到关闭指令,即将关闭");
-    	    				bot.getFriend(148125778).sendMessage(event.getSenderName()+"执行关闭命令");
     	    				Logger.l("关闭机器人","Debug");
-    	    				System.exit(0);
+    	    				exit();
     	    			}
+
     	    			if(msg.equals("Debug")) {
     	    				Values.debug=!Values.debug;
     	        			if(Values.debug) {
@@ -205,8 +245,9 @@ public class EventHandler {
     	            			Logger.l("Debug关闭","Debug");
     	            		}
     	    			}
-    	    			if(msg.contains("set")) {
 
+    	    			if(msg.contains("set")) {
+    	    				//设置处理级别
     	    				String[] SET=msg.split(" ",4);
     	    				String type=SET[1];
     	    				int level= Integer.valueOf(SET[3]).intValue();
@@ -223,6 +264,7 @@ public class EventHandler {
 
     	    			}
     	    			if(msg.equals("存活测试")){
+    	    				//测试机器人存活时间
     	    				long time=0;
     	    				while(true){
 								try {
@@ -235,6 +277,7 @@ public class EventHandler {
 							}
 						}
     				}else {
+    					//没得权限
         				event.getGroup().sendMessage(msg+":permission denied");
         			}
     			}
@@ -250,9 +293,9 @@ public class EventHandler {
 	}
 	
 	static void FrdMsg(FriendMessageEvent event) {
-
 		String msg=event.getMessage().contentToString();
     	long Sender = event.getFriend().getId();
+    	Logger.l(event.getFriend()+":"+msg,"msg");
 		TextFile.Write(Values.rootpath+"data/消息记录/好友/"+Sender+".txt",msg+System.getProperty("line.separator"));
     	if(Values.debug) {
     		Logger.l("收到好友消息:"+msg,"Debug");
@@ -260,10 +303,28 @@ public class EventHandler {
     	if(!(ProcessingLevel.get(Sender)==0)) {
 
     		if(ProcessingLevel.get(event.getFriend())==20) {
+				if(msg.contains("[图片]")){
+					//获取图片数
+					File folder = new File(Values.rootpath+"data/图片/随机图片");
+					File []list = folder.listFiles();
+					int fileCount = 0;
+					long length = 0;
+					for (File file : list){
+						if (file.isFile()){
+							fileCount++;
+							length += file.length();
+						}
+					}
+					int i=fileCount;
+					String FilePath= rootpath+"data/图片/随机图片/image"+i+".jpg";
+					Download.DownloadImageFromMsg(event.getMessage(),FilePath);
+					event.getFriend().sendMessage("保存成功");
+
+				}
     			if(msg.equals("BotOff")) {
     				event.getFriend().sendMessage("收到关闭命令,即将关闭");
     				Logger.l("关闭机器人","Debug");
-    				System.exit(0);
+    				exit();
     			}
     			if(msg.equals("Debug")) {
     				Values.debug=!Values.debug;
@@ -280,10 +341,6 @@ public class EventHandler {
     				String type=SET[1];
     				int level= Integer.valueOf(SET[3]).intValue();
     				if(type.equals("g")) {
-    					if(level==2) {
-    						TextFile.Empty(Values.rootpath+"data/config/MCGroup.txt");
-    						TextFile.Write(Values.rootpath+"data/config/MCGroup.txt", SET[2]);
-    					}
     					Group group=bot.getGroupOrFail(Long.parseLong(SET[2]));
     					ProcessingLevel.set(group, level);
     					event.getFriend().sendMessage("设置成功");
@@ -310,31 +367,27 @@ public class EventHandler {
 	
 	static void MemberJoin(MemberJoinEvent event) {
 		long FromGroup=event.getGroup().getId();
-		if(ProcessingLevel.get(event.getGroup())==2) {
+		/*弃用if(ProcessingLevel.get(event.getGroup())==2) {
 			File file =new File(Values.rootpath+"data/图片/迎新.png");
 			Image image=event.getGroup().uploadImage(ExternalResource.create(file));
 			// 上传一个图片并得到 Image 类型的 Message
 			event.getGroup().sendMessage(image); // 发送图片
 			event.getGroup().sendMessage("欢迎加入本群！\r\n我是本群的机器人(之一)，你可以使用*帮助 获取帮助");
-		}
+		}*/
 	}
 
 	
 	
-	static void waitFor(int somewhile){
+	public static void waitFor(int somewhile){
 		try {
 			Thread.sleep(somewhile);
-		} catch(InterruptedException ex) {
+		} catch(InterruptedException e) {
 			Thread.currentThread().interrupt();
 		}
 	}
 	static void exit() {
 		Logger.l("收到关闭指令","Debug");
-		try {
-            Thread.sleep(1000);
-        } catch(InterruptedException ex) {
-            Thread.currentThread().interrupt();
-        }
+		waitFor(1000);
 		System.exit(0);
 	}
 }
