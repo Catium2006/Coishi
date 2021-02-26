@@ -11,6 +11,7 @@ import net.mamoe.mirai.event.events.GroupMessageEvent;
 import net.mamoe.mirai.event.events.ImageUploadEvent;
 import net.mamoe.mirai.event.events.MemberJoinEvent;
 import net.mamoe.mirai.utils.BotConfiguration;
+import net.mamoe.mirai.utils.MiraiLogger;
 
 import java.io.File;
 
@@ -21,16 +22,20 @@ import cn.tonyn.value.Values;
 import static cn.tonyn.value.Values.bot;
 public class AndroidBot {
     public static void login(long QQ,String pwd){
+        Logger.l("数据路径="+Values.rootpath);
         Logger.l("当前登录账号:"+QQ+"密码:"+pwd);
         bot = BotFactory.INSTANCE.newBot(QQ, pwd, new BotConfiguration() {{
-            setProtocol(MiraiProtocol.ANDROID_PAD);
             fileBasedDeviceInfo(Values.rootpath+"data/config/devices/"+QQ+".json");
+            setProtocol(MiraiProtocol.ANDROID_PAD);
+            setWorkingDir(new File(Values.rootpath+"/sdcard/Coishi"));
         }});
         Values.running=true;
         bot.login();
         EventHandler.waitFor(100);
         if(bot.isOnline()){
             Logger.l("====登录成功====");
+        }else{
+            Logger.l("登录失败!请检查mirai日志","Error");
         }
 
         bot.getFriends().forEach(friend -> {
@@ -59,9 +64,6 @@ public class AndroidBot {
             EventHandler.MemberJoin(event);
         });
 
-        Listener BotOfflineEvt = GlobalEventChannel.INSTANCE.subscribeAlways(BotOfflineEvent.class, event ->{
-            Logger.l(event.getBot()+"机器人已离线", "Error");
-        });
 
         bot.join();
     }

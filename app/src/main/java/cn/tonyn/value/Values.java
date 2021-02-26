@@ -1,6 +1,7 @@
 package cn.tonyn.value;
 
 import android.annotation.SuppressLint;
+import android.widget.TextView;
 
 import net.mamoe.mirai.Bot;
 
@@ -16,4 +17,7 @@ public class Values {
     public static int BatteryNow=0;
     public static int NumbeOfThreads=0;
     public static long loginQQ;
+    public static boolean keep_screen_on=false;
+    public static TextView LOGGER=null;
+    public static String LOGSTRING="";
 }

@@ -28,6 +28,12 @@ public class Logger{
         SimpleDateFormat bjSdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");     // 北京
         bjSdf.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));  // 设置北京时区
         //输出
+        String s=bjSdf.format(date)+event;
+        Values.LOGSTRING=Values.LOGSTRING+s;
+        int length=Values.LOGSTRING.length();
+        if(length>512){
+            Values.LOGSTRING=Values.LOGSTRING.substring(length-512, length)+"\r\n";
+        }
         System.out.println(bjSdf.format(date)+event);
         //指定了文件名
         FileWriter writer = null;
@@ -55,6 +61,12 @@ public class Logger{
         SimpleDateFormat bjSdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");     // 北京
         bjSdf.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));  // 设置北京时区
         //输出
+        String s=bjSdf.format(date)+event;
+        Values.LOGSTRING=Values.LOGSTRING+s;
+        int length=Values.LOGSTRING.length();
+        if(length>512){
+            Values.LOGSTRING=Values.LOGSTRING.substring(length-512, length)+"\r\n";
+        }
         System.out.println(bjSdf.format(date)+event);
         //指定了文件名
         FileWriter writer = null;

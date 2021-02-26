@@ -18,9 +18,10 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
 
@@ -31,7 +32,6 @@ import cn.tonyn.bot.EventHandler;
 import cn.tonyn.file.Logger;
 import cn.tonyn.file.TextFile;
 import cn.tonyn.value.Values;
-import kotlin.reflect.jvm.internal.ReflectProperties;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -60,16 +60,59 @@ public class MainActivity extends AppCompatActivity {
         new File(Values.rootpath+"data/log").mkdirs();
         new File(Values.rootpath+"data/消息记录/群").mkdirs();
         new File(Values.rootpath+"data/消息记录/好友").mkdirs();
-        //new File(Values.rootpath+"data/背包").mkdirs();
         new File(Values.rootpath+"data/信息").mkdirs();
         new File(Values.rootpath+"data/用户").mkdirs();
-        /*if(!new File(Values.rootpath+"data/config/食物.txt").isFile()){
-            TextFile.Write(Values.rootpath+"data/config/食物.txt","饼干,");
-        }*/
+        if(!new File(Values.rootpath+"Coishi.cfg").isFile()){
+            TextFile.Write(Values.rootpath+"Coishi.cfg","keep_screen_on=false,keep_app_run=false,");
+        }
+
+    }
+    MediaPlayer mp3player=null;
+    void toKeepRunning(){
+        //播放一个空音频
+        new Thread(){
+            @Override
+            public void run(){
+                Values.NumbeOfThreads++;
+                mp3player.start();
+            }
+        }.start();
 
 
     }
-    void readConfig(){
+    void stopKeepingRunning(){
+        mp3player.stop();
+        Values.NumbeOfThreads--;
+    }
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        //是否要不锁屏
+        if(TextFile.Read(Values.rootpath+"Coishi.cfg").contains("keep_screen_on=true")){
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
+                    WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        }
+        setContentView(R.layout.activity_main);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        //初始化播放器
+        mp3player=MediaPlayer.create(this,R.raw.music1);
+        mp3player.setLooping(true);
+        //初始化日志显示器
+        Values.LOGGER=(TextView)findViewById(R.id.日志显示器);
+        //权限
+        getPermissions();
+        //创建目录和文件
+        mkDirs();
+        //读取配置
+        if(TextFile.Read(Values.rootpath+"Coishi.cfg").contains("keep_screen_on=true")){
+            Switch s=(Switch)findViewById(R.id.强制保留后台);
+            s.setChecked(true);
+        }
+        if(TextFile.Read(Values.rootpath+"Coishi.cfg").contains("keep_screen_on=true")){
+            Switch s=(Switch)findViewById(R.id.不锁定屏幕);
+            s.setChecked(true);
+        }
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -87,28 +130,62 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-    }
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
-                WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-        //权限和目录
-        getPermissions();
-        mkDirs();
         //记录时间
         Values.starttime=System.currentTimeMillis();
-        //读取配置
-        readConfig();
+
         //循环线程
         loop();
 
+        // 添加监听
         findViewById(R.id.登录).setOnClickListener(this::onClick);
-        findViewById(R.id.强制保留后台).setOnClickListener(this::onClick);
+        Switch switch1 = (Switch) findViewById(R.id.强制保留后台);
+        switch1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked){
+                    Snackbar.make(findViewById(R.id.LinearLayout), "开启", Snackbar.LENGTH_LONG).show();
+                    Values.keepAppRunning=true;
+                    String cfg=TextFile.Read(Values.rootpath+"Coishi.cfg");
+                    cfg=cfg.replace("keep_app_run=false","keep_app_run=true");
+                    TextFile.Empty(Values.rootpath+"Coishi.cfg");
+                    TextFile.Write(Values.rootpath+"Coishi.cfg",cfg);
+                    toKeepRunning();
+
+                }else {
+                    Snackbar.make(findViewById(R.id.LinearLayout), "关闭", Snackbar.LENGTH_LONG).show();
+                    Values.keepAppRunning=false;
+                    String cfg=TextFile.Read(Values.rootpath+"Coishi.cfg");
+                    cfg=cfg.replace("keep_app_run=true","keep_app_run=false");
+                    TextFile.Empty(Values.rootpath+"Coishi.cfg");
+                    TextFile.Write(Values.rootpath+"Coishi.cfg",cfg);
+                    stopKeepingRunning();
+                }
+            }
+        });
+        Switch switch2 = (Switch) findViewById(R.id.不锁定屏幕);
+        switch2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked){
+                    Snackbar.make(findViewById(R.id.LinearLayout), "开启,重启应用生效", Snackbar.LENGTH_LONG).show();
+                    Values.keep_screen_on=true;
+                    String cfg=TextFile.Read(Values.rootpath+"Coishi.cfg");
+                    cfg=cfg.replace("keep_screen_on=false","keep_screen_on=true");
+                    TextFile.Empty(Values.rootpath+"Coishi.cfg");
+                    TextFile.Write(Values.rootpath+"Coishi.cfg",cfg);
+
+                }else {
+                    Snackbar.make(findViewById(R.id.LinearLayout), "关闭,重启应用生效", Snackbar.LENGTH_LONG).show();
+                    Values.keep_screen_on=false;
+                    String cfg=TextFile.Read(Values.rootpath+"Coishi.cfg");
+                    cfg=cfg.replace("keep_screen_on=true","keep_screen_on=false");
+                    TextFile.Empty(Values.rootpath+"Coishi.cfg");
+                    TextFile.Write(Values.rootpath+"Coishi.cfg",cfg);
+
+                }
+            }
+        });
     }
 
     @Override
@@ -150,6 +227,12 @@ public class MainActivity extends AppCompatActivity {
                     Values.BatteryNow=battery;
                     //1000ms
                     EventHandler.waitFor(1000);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Values.LOGGER.setText(Values.LOGSTRING);
+                        }
+                    });
                 }
             }
         }.start();
@@ -182,7 +265,7 @@ public class MainActivity extends AppCompatActivity {
                                 if(Values.bot.isOnline()){
                                     Snackbar.make(findViewById(R.id.LinearLayout), "登录成功", Snackbar.LENGTH_LONG).show();
                                 }else{
-                                    Snackbar.make(findViewById(R.id.LinearLayout), "登录失败,请检查账号密码以及虚拟设备文件", Snackbar.LENGTH_LONG).show();
+                                    Snackbar.make(findViewById(R.id.LinearLayout), "登录失败,请检查mirai日志", Snackbar.LENGTH_LONG).show();
                                 }
                             }
                         }.start();
@@ -214,34 +297,8 @@ public class MainActivity extends AppCompatActivity {
 
             Logger.l("登录按钮点击");
         }
-        if(id==R.id.强制保留后台){
-            Values.keepAppRunning=!Values.keepAppRunning;
-            if(Values.keepAppRunning){
-                setKeepRunning();
-                Snackbar.make(findViewById(R.id.LinearLayout), "开启", Snackbar.LENGTH_LONG).show();
-            }else{
-                stopKeepingRunning();
-                Snackbar.make(findViewById(R.id.LinearLayout), "关闭", Snackbar.LENGTH_LONG).show();
-            }
-        }
 
     }
-    MediaPlayer mp3player=null;
-    void setKeepRunning(){
-        //播放一个空音频
-        mp3player=MediaPlayer.create(this,R.raw.music1);
-        mp3player.setLooping(true);
-        new Thread(){
-            @Override
-            public void run(){
-                Values.NumbeOfThreads++;
-                mp3player.start();
-            }
-        }.start();
-    }
-    void stopKeepingRunning(){
-        mp3player.stop();
-        Values.NumbeOfThreads--;
-    }
+
 
 }

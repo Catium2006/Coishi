@@ -17,8 +17,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-
-
             <EditText
                 android:id="@+id/enter_qq"
                 android:textColor="#000000"
@@ -44,13 +42,34 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
 
-                android:text="登录机器人"></Button>
+                android:text="登录机器人"
+                ></Button>
 
-            <Button
+            <Switch
                 android:id="@+id/强制保留后台"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="强制保留后台"></Button>
+                android:text="强制保留后台"
+                ></Switch>
+            <Switch
+                android:text="不锁定屏幕"
+                android:id="@+id/不锁定屏幕"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                ></Switch>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="日志(512字):"
+                android:textColor="#000000"></TextView>
+            <TextView
+                android:textSize="10dp"
+                android:id="@+id/日志显示器"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#000000"
+                android:text="---"
+                ></TextView>
         </LinearLayout>
     </ScrollView>
 
