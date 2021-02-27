@@ -1,23 +1,17 @@
 package cn.tonyn.bot;
 
-import com.google.android.material.snackbar.Snackbar;
 
 import net.mamoe.mirai.BotFactory;
 import net.mamoe.mirai.event.GlobalEventChannel;
 import net.mamoe.mirai.event.Listener;
-import net.mamoe.mirai.event.events.BotOfflineEvent;
 import net.mamoe.mirai.event.events.FriendMessageEvent;
 import net.mamoe.mirai.event.events.GroupMessageEvent;
-import net.mamoe.mirai.event.events.ImageUploadEvent;
 import net.mamoe.mirai.event.events.MemberJoinEvent;
 import net.mamoe.mirai.utils.BotConfiguration;
-import net.mamoe.mirai.utils.MiraiLogger;
 
 import java.io.File;
 
-import cn.tonyn.coishi.MainActivity;
 import cn.tonyn.file.Logger;
-import cn.tonyn.file.TextFile;
 import cn.tonyn.value.Values;
 import static cn.tonyn.value.Values.bot;
 public class AndroidBot {

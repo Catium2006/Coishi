@@ -61,15 +61,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="日志(512字):"
-                android:textColor="#000000"></TextView>
+                android:textColor="#000000"
+                ></TextView>
             <TextView
                 android:textSize="10dp"
                 android:id="@+id/日志显示器"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="#000000"
+                android:background="#DADADA"
                 android:text="---"
                 ></TextView>
+
         </LinearLayout>
     </ScrollView>
 

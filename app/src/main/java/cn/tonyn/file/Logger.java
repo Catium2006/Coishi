@@ -1,8 +1,6 @@
 package cn.tonyn.file;
 
 
-import android.widget.Toast;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -17,22 +15,24 @@ import cn.tonyn.value.Values;
 public class Logger{
     public static void l(String event){
         //日志
-        event="[Info] "+event;
+
         File log = new File(Values.rootpath+"data/log/Info.log");
         if(Values.debug) {//debug
             event="==Debug=="+event;
             log=new File(Values.rootpath+"data/log/Debug.log");
+        }else{
+            event="[Info] "+event;
         }
         //时间
         Date date = new Date();
         SimpleDateFormat bjSdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");     // 北京
         bjSdf.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));  // 设置北京时区
         //输出
-        String s=bjSdf.format(date)+event;
+        String s=bjSdf.format(date)+event+"\r\n";
         Values.LOGSTRING=Values.LOGSTRING+s;
         int length=Values.LOGSTRING.length();
         if(length>512){
-            Values.LOGSTRING=Values.LOGSTRING.substring(length-512, length)+"\r\n";
+            Values.LOGSTRING=Values.LOGSTRING.substring(length-512, length);
         }
         System.out.println(bjSdf.format(date)+event);
         //指定了文件名
@@ -61,11 +61,11 @@ public class Logger{
         SimpleDateFormat bjSdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");     // 北京
         bjSdf.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));  // 设置北京时区
         //输出
-        String s=bjSdf.format(date)+event;
+        String s=bjSdf.format(date)+event+"\r\n";
         Values.LOGSTRING=Values.LOGSTRING+s;
         int length=Values.LOGSTRING.length();
         if(length>512){
-            Values.LOGSTRING=Values.LOGSTRING.substring(length-512, length)+"\r\n";
+            Values.LOGSTRING=Values.LOGSTRING.substring(length-512, length);
         }
         System.out.println(bjSdf.format(date)+event);
         //指定了文件名
