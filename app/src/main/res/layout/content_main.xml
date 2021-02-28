@@ -41,9 +41,9 @@
                 android:id="@+id/登录"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-
                 android:text="登录机器人"
                 ></Button>
+
 
             <Switch
                 android:id="@+id/强制保留后台"

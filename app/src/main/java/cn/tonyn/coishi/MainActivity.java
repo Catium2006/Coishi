@@ -1,6 +1,7 @@
 package cn.tonyn.coishi;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
@@ -18,15 +19,18 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.File;
 
+import cn.tonyn.ayahttp.Server;
 import cn.tonyn.bot.AndroidBot;
 import cn.tonyn.bot.EventHandler;
 import cn.tonyn.file.Logger;
@@ -84,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
         mp3player.stop();
         Values.NumbeOfThreads--;
     }
+    Server httpserver;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -130,7 +135,9 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
+        //在线日志
+        httpserver=new Server(10020);
+        httpserver.Listen();
         //记录时间
         Values.starttime=System.currentTimeMillis();
 
@@ -225,14 +232,18 @@ public class MainActivity extends AppCompatActivity {
                     BatteryManager batteryManager = (BatteryManager)getSystemService(BATTERY_SERVICE);
                     int battery = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY);
                     Values.BatteryNow=battery;
-                    //1000ms
-                    EventHandler.waitFor(1000);
+                    //在线日志
+                    httpserver.Page=Values.AllLog.toString()+"</p></body></html>";
+                    //更新UI
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             Values.LOGGER.setText(Values.LOGSTRING);
                         }
                     });
+                    //1000ms
+                    EventHandler.waitFor(1000);
+
                 }
             }
         }.start();
@@ -298,7 +309,7 @@ public class MainActivity extends AppCompatActivity {
             Logger.l("登录按钮点击");
         }
 
-    }
 
+    }
 
 }

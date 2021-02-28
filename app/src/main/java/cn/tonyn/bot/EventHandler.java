@@ -172,7 +172,10 @@ public class EventHandler {
     			if(msg.startsWith("#")) {
     				if((ProcessingLevel.get(Sender)==20)) {
     					msg=msg.replace("#", "");
-
+    					if(msg.equals("日志")){
+    						//请改为您机器人设备的公网ip并进行端口转发
+    						event.getGroup().sendMessage("查看全部日志:http://www.tonyn.cn:10020");
+						}
     					if(msg.equals("系统信息")){
     						long time=System.currentTimeMillis();
     						time=time-Values.starttime;

@@ -20,4 +20,5 @@ public class Values {
     public static boolean keep_screen_on=false;
     public static TextView LOGGER=null;
     public static String LOGSTRING="";
+    public static StringBuilder AllLog=new StringBuilder();
 }

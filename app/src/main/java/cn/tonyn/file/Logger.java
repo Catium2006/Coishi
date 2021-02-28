@@ -29,6 +29,7 @@ public class Logger{
         bjSdf.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));  // 设置北京时区
         //输出
         String s=bjSdf.format(date)+event+"\r\n";
+        Values.AllLog.append("<p>"+s+"</p>");
         Values.LOGSTRING=Values.LOGSTRING+s;
         int length=Values.LOGSTRING.length();
         if(length>512){
@@ -62,6 +63,7 @@ public class Logger{
         bjSdf.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));  // 设置北京时区
         //输出
         String s=bjSdf.format(date)+event+"\r\n";
+        Values.AllLog.append("<p>"+s+"</p>");
         Values.LOGSTRING=Values.LOGSTRING+s;
         int length=Values.LOGSTRING.length();
         if(length>512){
