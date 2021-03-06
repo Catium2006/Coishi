@@ -17,7 +17,7 @@ import static cn.tonyn.value.Values.bot;
 public class AndroidBot {
     public static void login(long QQ,String pwd){
         Logger.l("数据路径="+Values.rootpath);
-        Logger.l("当前登录账号:"+QQ+"密码:"+pwd);
+        System.out.println("当前登录账号:"+QQ+"密码:"+pwd);
         bot = BotFactory.INSTANCE.newBot(QQ, pwd, new BotConfiguration() {{
             fileBasedDeviceInfo(Values.rootpath+"data/config/devices/"+QQ+".json");
             setProtocol(MiraiProtocol.ANDROID_PAD);
