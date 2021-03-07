@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
         //创建目录和文件
         mkDirs();
         //读取配置
-        if(TextFile.Read(Values.rootpath+"Coishi.cfg").contains("keep_screen_on=true")){
+        if(TextFile.Read(Values.rootpath+"Coishi.cfg").contains("keep_app_run=true")){
             Switch s=(Switch)findViewById(R.id.强制保留后台);
             s.setChecked(true);
         }
@@ -232,8 +232,6 @@ public class MainActivity extends AppCompatActivity {
                     BatteryManager batteryManager = (BatteryManager)getSystemService(BATTERY_SERVICE);
                     int battery = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY);
                     Values.BatteryNow=battery;
-                    //在线日志
-                    httpserver.Page=Values.AllLog.toString()+"</p></body></html>";
                     //更新UI
                     runOnUiThread(new Runnable() {
                         @Override

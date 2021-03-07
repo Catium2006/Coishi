@@ -31,8 +31,9 @@ public class Server {
                     while(true) {
                         Socket client = server.accept();
                         StringBuilder responseContext1 =new StringBuilder();
-                        responseContext1.append("<html><head>在线日志</head><body><h1>Coishi日志</h1><h2>Powered by AyaHttp 1.0 (Unoffical Edition)</h2><p>");
+                        responseContext1.append("<html><head>在线日志</head><body><h1>Coishi日志</h1><h2>Powered by AyaHttp 1.0 (Unoffical Edition)</h2>");
                         responseContext1.append(Page);
+                        responseContext1.append("</body></html>");
                         StringBuilder response1 =new StringBuilder();
                         response1.append("HTTP/1.1").append(BLANK).append("200").append(BLANK).append("OK").append(LN);
                         response1.append("Server:AyaHttp Server/1.0.0").append(LN);
@@ -58,11 +59,14 @@ public class Server {
             }
         }.start();
     }
-    public static void WaitFor(int ms) {
+    void WaitFor(int ms) {
         try {
             Thread.sleep(ms);
         } catch (Exception e){
             Logger.l(e.getMessage(),"Exception");
         }
+    }
+    public int getPort(){
+        return Port;
     }
 }

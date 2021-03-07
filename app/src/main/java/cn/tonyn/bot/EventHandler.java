@@ -23,6 +23,7 @@ import static cn.tonyn.value.Values.rootpath;
 
 public class EventHandler {
 	//复读
+	static String msg0="";
 	static String msg1="";
 	static String msg2="";
 
@@ -43,6 +44,7 @@ public class EventHandler {
     		//等待100ms，防止出现消息看不到的问题
     		waitFor(100);
     		//复读
+			msg0=msg1;
     		msg1=msg2;
     		msg2=msg;
     		if(msg1.equals(msg2)){
@@ -173,7 +175,7 @@ public class EventHandler {
     				if((ProcessingLevel.get(Sender)==20)) {
     					msg=msg.replace("#", "");
     					if(msg.equals("日志")){
-    						//请改为您机器人设备的公网ip并进行端口转发
+    						//请改为您机器人设备的ip并进行端口转发
     						event.getGroup().sendMessage("查看全部日志:http://www.tonyn.cn:10020");
 						}
     					if(msg.equals("系统信息")){
