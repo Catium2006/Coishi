@@ -197,41 +197,6 @@ public class EventHandler {
     						String send="操作系统信息:\r\n├操作系统:"+System.getProperty("os.name")+"/"+System.getProperty("os.arch")+"/"+System.getProperty("os.version")+"\r\n├程序运行目录:"+System.getProperty("user.dir")+"\r\n├设备用户:"+System.getProperty("user.name")+"\r\n├JVM:"+System.getProperty("java.vm.name")+"/"+System.getProperty("java.vm.version")+"\r\n├当前电量:"+Values.BatteryNow+"％\r\n应用进程信息:\r\n├运行时间:"+seconds+"s\r\n├保留进程:"+Values.keepAppRunning+"\r\n├线程数:"+Values.NumbeOfThreads+"\r\n├消耗的电量:"+(Values.BatteryPrime-Values.BatteryNow)+"％\r\n├预计可运行时间:"+TimeAvailable;
 							event.getGroup().sendMessage(send);
 						}
-    					/*if(msg.startsWith("sys")){
-    					//有问题，已弃用
-							final String msg3=msg.replace("sys ","");
-    						new Thread(){
-    							@Override
-								public void run(){
-									//这部分空白指导完成
-									String[] cmd = { "/system/bin/sh", "-c", msg3 };
-									BufferedInputStream in=null;
-									try {
-										Process ps = Runtime.getRuntime().exec(cmd);
-										ps.waitFor();
-										in=new BufferedInputStream(ps.getInputStream());
-										int ptr=0;
-										StringBuffer buffer=new StringBuffer();
-										while((ptr=in.read())!=-1){
-											buffer.append((char)ptr);
-										}
-										event.getGroup().sendMessage(buffer.toString());
-										ps.destroy();
-									}catch (IOException e){
-										Logger.l(e.getMessage()+"\r\n"+e.getStackTrace());
-									}catch( InterruptedException e2){
-										Logger.l(e2.getMessage()+"\r\n"+e2.getStackTrace());
-									}finally{
-										try{
-											in.close();
-										}catch(IOException e){
-											//do nothing
-										}
-									}
-								}
-							}.start();
-
-						}*/
 
     					if(msg.equals("BotOff")) {
     						//关闭
@@ -372,13 +337,7 @@ public class EventHandler {
 	
 	static void MemberJoin(MemberJoinEvent event) {
 		long FromGroup=event.getGroup().getId();
-		/*弃用if(ProcessingLevel.get(event.getGroup())==2) {
-			File file =new File(Values.rootpath+"data/图片/迎新.png");
-			Image image=event.getGroup().uploadImage(ExternalResource.create(file));
-			// 上传一个图片并得到 Image 类型的 Message
-			event.getGroup().sendMessage(image); // 发送图片
-			event.getGroup().sendMessage("欢迎加入本群！\r\n我是本群的机器人(之一)，你可以使用*帮助 获取帮助");
-		}*/
+
 	}
 
 	
