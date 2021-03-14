@@ -1,9 +1,15 @@
 package cn.tonyn.bot;
 
 
+import android.graphics.PixelFormat;
+import android.hardware.Camera;
+import android.view.SurfaceHolder;
+
 import java.io.File;
+import java.io.IOException;
 import java.util.Random;
 
+import cn.tonyn.coishi.MainActivity;
 import cn.tonyn.file.Logger;
 import cn.tonyn.file.TextFile;
 import cn.tonyn.util.Download;

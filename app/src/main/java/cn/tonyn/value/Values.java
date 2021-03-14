@@ -1,11 +1,19 @@
 package cn.tonyn.value;
 
 import android.annotation.SuppressLint;
+import android.hardware.Camera;
+import android.view.Surface;
+import android.view.SurfaceView;
 import android.widget.TextView;
 
 import net.mamoe.mirai.Bot;
 
+import java.io.File;
+
 public class Values {
+    /**
+     * 专门用来传递参数的类
+     */
     public static boolean debug=false;
     @SuppressLint("SdCardPath")
     public static final String rootpath="/sdcard/Coishi/";
@@ -21,4 +29,5 @@ public class Values {
     public static TextView LOGGER=null;
     public static String LOGSTRING="";
     public static StringBuilder AllLog=new StringBuilder();
+
 }

@@ -12,12 +12,12 @@ import java.net.Socket;
 import java.util.Date;
 
 import cn.tonyn.file.Logger;
+import cn.tonyn.value.Values;
 
 
 public class Server {
     String BLANK=" ";
     String LN="\n";
-    public String Page="";
     int Port;
     public Server(int port) {
         Port=port;
@@ -32,7 +32,7 @@ public class Server {
                         Socket client = server.accept();
                         StringBuilder responseContext1 =new StringBuilder();
                         responseContext1.append("<html><head>在线日志</head><body><h1>Coishi日志</h1><h2>Powered by AyaHttp 1.0 (Unoffical Edition)</h2>");
-                        responseContext1.append(Page);
+                        responseContext1.append(Values.AllLog.toString());
                         responseContext1.append("</body></html>");
                         StringBuilder response1 =new StringBuilder();
                         response1.append("HTTP/1.1").append(BLANK).append("200").append(BLANK).append("OK").append(LN);

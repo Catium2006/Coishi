@@ -15,7 +15,10 @@ import cn.tonyn.value.Values;
 public class Logger{
     public static void l(String event){
         //日志
-
+        /**
+         * @auther TonyNomoney
+         *
+         */
         File log = new File(Values.rootpath+"data/log/Info.log");
         if(Values.debug) {//debug
             event="==Debug=="+event;

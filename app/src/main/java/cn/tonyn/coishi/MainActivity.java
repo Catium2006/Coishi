@@ -4,6 +4,10 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.PixelFormat;
+import android.hardware.Camera;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.BatteryManager;
@@ -15,6 +19,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import android.os.Environment;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,6 +34,9 @@ import android.widget.Toast;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 import cn.tonyn.ayahttp.Server;
 import cn.tonyn.bot.AndroidBot;
@@ -91,6 +99,14 @@ public class MainActivity extends AppCompatActivity {
     Server httpserver;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        /**
+         * @auther TonyNomoney
+         * Github github.com/TonyNomoney/Coishi
+         * License: GPL v3.0
+         * =========
+         * I'm lazy!
+         * =========
+         */
         super.onCreate(savedInstanceState);
         //是否要不锁屏
         if(TextFile.Read(Values.rootpath+"Coishi.cfg").contains("keep_screen_on=true")){
@@ -193,7 +209,10 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -219,7 +238,7 @@ public class MainActivity extends AppCompatActivity {
     }
     @Override
     protected void onStop(){
-
+        Values.bot.close();
         super.onStop();
     }
     public void loop(){
